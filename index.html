@@ -1,0 +1,843 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
+<title>তোয়ার জন্য</title>
+<style>
+  @font-face{font-family:'Noto Serif Bengali';font-style:normal;font-weight:400;font-display:swap;src:url(assets/fonts/noto-serif-bengali-bengali-400-normal.woff2) format('woff2');unicode-range:U+0951-0952,U+0964-0965,U+0980-09FE,U+200C-200D,U+20B9,U+25CC;}
+  @font-face{font-family:'Noto Serif Bengali';font-style:normal;font-weight:500;font-display:swap;src:url(assets/fonts/noto-serif-bengali-bengali-500-normal.woff2) format('woff2');unicode-range:U+0951-0952,U+0964-0965,U+0980-09FE,U+200C-200D,U+20B9,U+25CC;}
+  @font-face{font-family:'Noto Serif Bengali';font-style:normal;font-weight:600;font-display:swap;src:url(assets/fonts/noto-serif-bengali-bengali-600-normal.woff2) format('woff2');unicode-range:U+0951-0952,U+0964-0965,U+0980-09FE,U+200C-200D,U+20B9,U+25CC;}
+  @font-face{font-family:'Noto Serif Bengali';font-style:normal;font-weight:400;font-display:swap;src:url(assets/fonts/noto-serif-bengali-latin-400-normal.woff2) format('woff2');unicode-range:U+0000-00FF,U+2000-206F;}
+  @font-face{font-family:'Noto Serif Bengali';font-style:normal;font-weight:500;font-display:swap;src:url(assets/fonts/noto-serif-bengali-latin-500-normal.woff2) format('woff2');unicode-range:U+0000-00FF,U+2000-206F;}
+  @font-face{font-family:'Noto Serif Bengali';font-style:normal;font-weight:600;font-display:swap;src:url(assets/fonts/noto-serif-bengali-latin-600-normal.woff2) format('woff2');unicode-range:U+0000-00FF,U+2000-206F;}
+  @font-face{font-family:'Cormorant Garamond';font-style:italic;font-weight:500;font-display:swap;src:url(assets/fonts/cormorant-garamond-latin-500-italic.woff2) format('woff2');}
+  @font-face{font-family:'Cormorant Garamond';font-style:normal;font-weight:600;font-display:swap;src:url(assets/fonts/cormorant-garamond-latin-600-normal.woff2) format('woff2');}
+  :root{
+    --cream:        #efe4c6;
+    --cream-deep:   #e1cd9c;
+    --cream-shadow: #cdb787;
+    --ink:          #4a3826;
+    --ink-soft:     #6b5642;
+    --mauve:        #7d8a8f;
+    --mauve-deep:   #2f3f4f;
+    --wax:          #2c3e52;
+    --wax-deep:     #1a2735;
+    --gold:         #b08d3e;
+    --gold-light:   #d8bd76;
+    --sage:         #6b7b4f;
+    --dvh: 100vh;
+  }
+  @supports (height: 100dvh){ :root{ --dvh: 100dvh; } }
+
+  *,*::before,*::after{ box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+  html,body{ margin:0; padding:0; height:100%; background:#2a2118; overscroll-behavior:none; }
+  body{
+    font-family:'Cormorant Garamond',serif;
+    color:var(--ink);
+    display:flex; align-items:center; justify-content:center;
+    min-height:var(--dvh);
+    -webkit-font-smoothing:antialiased;
+  }
+
+  .stage{
+    position:relative;
+    width:100%;
+    max-width:520px;
+    height:var(--dvh);
+    overflow:hidden;
+    background:
+      radial-gradient(ellipse at 50% 0%, rgba(255,244,214,.35), transparent 60%),
+      #d8c69a;
+  }
+  .stage::before{
+    /* faint paper grain + pressed-flower texture behind everything */
+    content:'';
+    position:absolute; inset:0;
+    background-image:url('assets/paper.jpg');
+    background-size:cover;
+    background-position:center;
+    opacity:.15;
+    mix-blend-mode:multiply;
+    z-index:0;
+    pointer-events:none;
+  }
+
+  /* ---------- ambient dust motes ---------- */
+  .motes{ position:absolute; inset:0; pointer-events:none; z-index:2; }
+  .mote{
+    position:absolute; border-radius:50%;
+    background:radial-gradient(circle, rgba(255,248,222,.9), rgba(255,248,222,0) 70%);
+    opacity:0; animation:drift 9s ease-in-out infinite;
+  }
+  @keyframes drift{
+    0%{ opacity:0; transform:translateY(0) translateX(0); }
+    12%{ opacity:.55; }
+    50%{ opacity:.35; }
+    100%{ opacity:0; transform:translateY(-70px) translateX(14px); }
+  }
+
+  /* ---------- floating pressed-flower petals ---------- */
+  .petals{ position:absolute; inset:0; pointer-events:none; z-index:2; }
+  .petal{ position:absolute; opacity:0; animation:petalDrift 12s ease-in-out infinite; }
+  .petal svg{ width:100%; height:100%; display:block; }
+  @keyframes petalDrift{
+    0%{ opacity:0; transform:translateY(0) translateX(0) rotate(0deg); }
+    10%{ opacity:.55; }
+    55%{ opacity:.3; }
+    100%{ opacity:0; transform:translateY(-95px) translateX(20px) rotate(55deg); }
+  }
+
+  /* ---------- ornamental page frame + corner vines ---------- */
+  .frame-border{
+    position:absolute; inset:14px;
+    border:1px solid rgba(176,141,62,.38);
+    z-index:1; pointer-events:none;
+  }
+  .frame-border::before{
+    content:''; position:absolute; inset:5px;
+    border:1px solid rgba(176,141,62,.22);
+  }
+
+  .corner-flourish{
+    position:absolute; width:15vw; max-width:64px; min-width:44px;
+    aspect-ratio:1; opacity:.45; z-index:1; pointer-events:none;
+  }
+  .corner-flourish svg{ width:100%; height:100%; display:block; }
+  .corner-tl{ top:22px; left:22px; }
+  .corner-tr{ top:22px; right:22px; transform:scaleX(-1); }
+  .corner-bl{ bottom:22px; left:22px; transform:scaleY(-1); }
+  .corner-br{ bottom:22px; right:22px; transform:scale(-1,-1); }
+
+  /* ================= ENVELOPE SCENE ================= */
+  .envelope-scene{
+    position:absolute; inset:0;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    gap:22px;
+    padding:24px;
+    z-index:3;
+    transition:opacity .55s ease, transform .55s ease;
+  }
+  .envelope-scene.hide{ opacity:0; transform:scale(.92); pointer-events:none; }
+
+  .envelope-wrap{ perspective:1000px; }
+
+  .envelope{
+    position:relative;
+    width:min(72vw, 300px);
+    aspect-ratio: 3 / 2.02;
+    transform-style:preserve-3d;
+  }
+
+  .envelope-back{
+    position:absolute; inset:0;
+    border-radius:3px;
+    background:linear-gradient(168deg,var(--cream) 0%, var(--cream-deep) 78%, var(--cream-shadow) 100%);
+    box-shadow:
+      0 26px 46px -18px rgba(35,22,10,.55),
+      inset 0 0 0 1px rgba(255,255,255,.35),
+      inset 0 0 0 7px rgba(176,141,62,.16),
+      inset 0 0 0 8px rgba(176,141,62,.4);
+    z-index:1;
+  }
+  .envelope-back::after{
+    /* subtle fold shadow of the inner bottom flap */
+    content:''; position:absolute; left:6%; right:6%; bottom:6%; height:52%;
+    background:linear-gradient(195deg, rgba(74,56,38,0) 55%, rgba(74,56,38,.12) 100%);
+    clip-path:polygon(0 100%, 100% 100%, 50% 8%);
+    z-index:2; pointer-events:none;
+  }
+
+  .envelope-address{
+    position:absolute; left:0; right:0; bottom:6.5%;
+    display:flex; flex-direction:column; align-items:center; gap:1px;
+    z-index:3;
+    pointer-events:none;
+  }
+  .envelope-address .address-text{
+    font-family:'Cormorant Garamond', serif; font-style:italic; font-weight:500;
+    font-size:clamp(15px, 4.4vw, 18px);
+    letter-spacing:.4px;
+    color:var(--ink-soft);
+    opacity:.9;
+  }
+  .address-bn{
+    font-family:'Noto Serif Bengali', serif; font-weight:600;
+    font-size:clamp(14px, 4.2vw, 17px); line-height:1.5;
+    color:var(--ink);
+  }
+  .address-rule{
+    width:clamp(64px, 20vw, 96px);
+    height:8px;
+    opacity:.65;
+  }
+
+  .stamp{
+    position:absolute; top:6%; right:7%;
+    width:clamp(30px, 9vw, 38px);
+    height:clamp(36px, 10.8vw, 45px);
+    background:linear-gradient(160deg,#f8efd6 0%, #e9d7ab 100%);
+    border:2px dashed rgba(44,62,82,.45);
+    border-radius:2px;
+    display:flex; align-items:center; justify-content:center;
+    transform:rotate(-8deg);
+    box-shadow:0 3px 7px rgba(35,22,10,.28);
+    z-index:5;
+    pointer-events:none;
+  }
+  .stamp svg{ width:56%; height:56%; opacity:.9; }
+
+  .envelope-flap{
+    position:absolute; top:0; left:0; width:100%; height:60%;
+    clip-path:polygon(0 0, 100% 0, 50% 100%);
+    background:linear-gradient(155deg, #e9d7ab 0%, #d6bf8c 100%);
+    box-shadow:inset 0 -10px 16px -10px rgba(74,56,38,.4);
+    transform-origin:top center;
+    transition:transform .85s cubic-bezier(.62,0,.32,1), box-shadow .85s ease;
+    z-index:4;
+  }
+  .envelope-flap .sprig{ position:absolute; top:14%; left:50%; transform:translateX(-50%); width:26px; height:26px; opacity:.55; }
+
+  .envelope.opened .envelope-flap{
+    transform:rotateX(178deg);
+    box-shadow:none;
+  }
+
+  .seal{
+    position:absolute; left:50%; top:41%; transform:translate(-50%,-50%);
+    width:clamp(52px, 15vw, 64px); height:clamp(52px, 15vw, 64px);
+    border:none; background:none; padding:0; cursor:pointer;
+    z-index:6;
+    filter:drop-shadow(0 8px 14px rgba(15,22,32,.5));
+    animation:sealPulse 2.6s ease-in-out infinite;
+  }
+  @keyframes sealPulse{ 0%,100%{ transform:translate(-50%,-50%) scale(1); } 50%{ transform:translate(-50%,-50%) scale(1.045); } }
+
+  .seal-half{ position:absolute; inset:0; width:100%; height:100%; transition:transform .55s cubic-bezier(.4,0,.2,1), opacity .5s ease; }
+  .seal-half-left{ clip-path:inset(0 50% 0 0); }
+  .seal-half-right{ clip-path:inset(0 0 0 50%); }
+
+  .seal-mono{
+    position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+    font-family:'Cormorant Garamond', serif; font-weight:600;
+    font-size:clamp(26px, 7.4vw, 32px);
+    color:#e9d9b0;
+    text-shadow:0 1px 0 rgba(0,0,0,.35), 0 -1px 0 rgba(255,255,255,.15);
+    transition:opacity .35s ease, transform .4s ease;
+  }
+
+  .seal.cracked{ animation:none; pointer-events:none; }
+  .seal.cracked .seal-half-left{ transform:translate(-14px,-4px) rotate(-22deg); opacity:0; }
+  .seal.cracked .seal-half-right{ transform:translate(14px,4px) rotate(22deg); opacity:0; }
+  .seal.cracked .seal-mono{ opacity:0; transform:scale(.6) translateY(-6px); }
+
+  .tap-hint{
+    margin:0; text-align:center;
+    font-family:'Noto Serif Bengali', serif; font-weight:400;
+    font-size:clamp(13px, 3.6vw, 15px);
+    color:#4a3826;
+    opacity:.75;
+    transition:opacity .4s ease;
+  }
+  .envelope.opened ~ .tap-hint,
+  .envelope-wrap:has(.envelope.opened) + .tap-hint{ opacity:0; }
+
+  /* ================= LETTER SCENE ================= */
+  .letter-scene{
+    position:absolute; inset:0;
+    display:flex; align-items:center; justify-content:center;
+    z-index:5;
+    opacity:0; transform:scale(.22);
+    transform-origin:50% 48%;
+    transition:opacity .8s ease, transform .8s cubic-bezier(.22,.9,.3,1.1);
+    pointer-events:none;
+  }
+  .letter-scene.show{ opacity:1; transform:scale(1); pointer-events:auto; }
+
+  .letter-paper{
+    position:relative;
+    width:100%; height:100%;
+    padding: max(30px, env(safe-area-inset-top) + 18px) 18px max(30px, env(safe-area-inset-bottom) + 22px);
+    background-image:url('assets/paper.jpg');
+    background-size:cover;
+    background-position:center;
+    overflow-y:auto;
+    -webkit-overflow-scrolling:touch;
+    display:flex; flex-direction:column;
+  }
+  .letter-paper::before{
+    content:'';
+    position:absolute; inset:0;
+    box-shadow:inset 0 0 90px rgba(40,26,14,.28), inset 0 0 26px rgba(40,26,14,.18);
+    pointer-events:none;
+  }
+
+  .sound-toggle{
+    position:absolute; top:calc(env(safe-area-inset-top) + 14px); right:16px;
+    width:38px; height:38px; border-radius:50%; border:1px solid rgba(74,56,38,.25);
+    background:rgba(239,228,198,.55); backdrop-filter:blur(3px);
+    display:flex; align-items:center; justify-content:center;
+    font-size:16px; color:var(--ink-soft); cursor:pointer; z-index:8;
+  }
+  .sound-toggle:focus-visible, .replay-btn:focus-visible, .seal:focus-visible{
+    outline:2px solid var(--gold); outline-offset:3px;
+  }
+
+  .sheet{
+    position:relative; z-index:1;
+    margin:34px 0 0;
+    padding:30px 20px 26px;
+    background:rgba(248,241,219,.93);
+    border:1px solid rgba(176,141,62,.45);
+    box-shadow:0 10px 26px -14px rgba(35,22,10,.5), inset 0 0 0 4px rgba(248,241,219,.93), inset 0 0 0 5px rgba(176,141,62,.25);
+  }
+  .letter-body{
+    font-family:'Noto Serif Bengali', 'Hind Siliguri', 'Kalpurush', serif;
+    font-weight:400;
+    font-size:17px;
+    line-height:1.95;
+    color:#33291d;
+    max-width:36em;
+    margin:0 auto;
+    text-align:left;
+    hyphens:none; word-break:normal; overflow-wrap:break-word;
+  }
+  .letter-body p{
+    margin:0 0 1.15em;
+    opacity:0; transform:translateY(8px);
+    transition:opacity .85s ease, transform .85s ease;
+  }
+  .letter-body p.revealed{ opacity:1; transform:translateY(0); }
+  .letter-greeting{ font-size:20px; font-weight:600; color:var(--mauve-deep); margin-bottom:1em !important; }
+  .letter-closing{ font-weight:600; color:#2a2016; border-top:1px solid rgba(176,141,62,.45); padding-top:1.1em; }
+
+  .letter-signature{
+    margin-top:1.6em !important; text-align:right;
+  }
+  .sig-line{ display:block; font-size:15px; font-weight:400; color:var(--ink-soft); line-height:1.7; }
+  .sig-rule{ display:block; width:46px; height:1px; background:var(--gold); margin:10px 0 8px auto; }
+  .sig-name{ display:block; font-size:21px; font-weight:600; color:var(--mauve-deep); letter-spacing:.2px; line-height:1.4; }
+
+  .replay-wrap{ position:relative; z-index:1; display:flex; justify-content:center; margin-top:22px; }
+  .replay-btn{
+    border:1px solid rgba(74,56,38,.35); background:rgba(248,241,219,.85);
+    color:var(--ink-soft); font-family:'Noto Serif Bengali', serif; font-weight:400;
+    font-size:14px; padding:9px 20px; border-radius:999px; cursor:pointer;
+    opacity:0; transition:opacity 1s ease;
+  }
+  .replay-btn.revealed{ opacity:1; }
+
+
+  /* ================= PREMIUM LAYER ================= */
+  :root{
+    --navy:#1f2f40; --navy-deep:#0e1620;
+    --pattern:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='48'%3E%3Cg fill='none' stroke='%23d9bc6f' stroke-opacity='.12' stroke-width='.8'%3E%3Crect x='14' y='14' width='20' height='20'/%3E%3Crect x='14' y='14' width='20' height='20' transform='rotate(45 24 24)'/%3E%3Ccircle cx='24' cy='24' r='3'/%3E%3C/g%3E%3C/svg%3E");
+  }
+  html,body{ background:var(--navy-deep); }
+  .stage{
+    background:
+      radial-gradient(ellipse at 50% 38%, #2f475f 0%, #1a2634 58%, #0e1620 100%);
+  }
+  .stage::before{
+    background-image:var(--pattern); background-size:48px 48px; background-position:center;
+    opacity:1; mix-blend-mode:normal;
+    -webkit-mask-image:radial-gradient(ellipse at 50% 45%, #000 20%, transparent 85%);
+            mask-image:radial-gradient(ellipse at 50% 45%, #000 20%, transparent 85%);
+  }
+  .frame-border{ border-color:rgba(217,188,111,.55); }
+  .frame-border::before{ border-color:rgba(217,188,111,.28); }
+  .corner-flourish{ opacity:.9; }
+  .envelope-scene::before{
+    content:''; position:absolute; left:50%; top:46%; width:130%; aspect-ratio:1;
+    transform:translate(-50%,-50%);
+    background:radial-gradient(circle, rgba(227,198,117,.20) 0%, rgba(227,198,117,0) 60%);
+    pointer-events:none;
+  }
+  .tap-hint{ color:#eadfc3; opacity:.85; }
+  .tap-hint::before, .tap-hint::after{
+    content:''; display:inline-block; width:26px; height:1px; vertical-align:middle;
+    background:linear-gradient(90deg, transparent, #d9bc6f); margin:0 10px;
+  }
+  .tap-hint::after{ transform:scaleX(-1); }
+
+  .envelope-back{
+    background:
+      linear-gradient(168deg,#f2e6c6 0%, #e4d09f 78%, #cdb787 100%);
+    box-shadow:
+      0 34px 60px -18px rgba(0,0,0,.75),
+      0 0 0 1px rgba(217,188,111,.55),
+      inset 0 0 0 7px rgba(176,141,62,.16),
+      inset 0 0 0 8px rgba(176,141,62,.5);
+  }
+  .envelope-letter{
+    position:absolute; left:7%; right:7%; top:9%; height:82%; z-index:2;
+    background:linear-gradient(#fcf8ea,#f1e6c8);
+    border:1px solid rgba(176,141,62,.55);
+    box-shadow:0 2px 8px rgba(0,0,0,.25);
+    display:flex; flex-direction:column; align-items:center; gap:7px; padding-top:11%;
+    transition:transform 1s cubic-bezier(.3,.75,.2,1) .5s;
+  }
+  .envelope-letter i{ display:block; width:62%; height:2px; background:rgba(176,141,62,.38); }
+  .envelope-letter i:nth-of-type(2){ width:48%; }
+  .envelope-letter i:nth-of-type(3){ width:55%; }
+  .envelope-letter .lt{ font-family:'Cormorant Garamond',serif; font-weight:600; font-size:22px; color:#8a6a22; line-height:1; margin-bottom:4px; }
+  .envelope.opened .envelope-letter{ transform:translateY(-56%); }
+  .envelope-pocket{
+    position:absolute; inset:0; z-index:3; pointer-events:none;
+    background:linear-gradient(160deg,#efe1b8 0%, #dcc68f 100%);
+    clip-path:polygon(0 0, 50% 60%, 100% 0, 100% 100%, 0 100%);
+    box-shadow:inset 0 0 0 8px rgba(176,141,62,.0);
+  }
+  .pocket-lines{ position:absolute; inset:0; width:100%; height:100%; z-index:3; pointer-events:none; }
+  .envelope-flap{
+    background:linear-gradient(155deg,#f3e8c8 0%, #dcc68f 100%);
+  }
+  .address-text{
+    font-size:clamp(17px, 5vw, 20px) !important; font-weight:500;
+    background:linear-gradient(90deg,#7a5c1c,#b8902e 45%,#7a5c1c);
+    -webkit-background-clip:text; background-clip:text; color:transparent !important; opacity:1 !important;
+  }
+  .seal::after{
+    content:''; position:absolute; inset:6%; border-radius:50%; pointer-events:none;
+    background:linear-gradient(115deg, transparent 38%, rgba(255,255,255,.28) 50%, transparent 62%);
+    background-size:250% 100%; animation:sealShine 3.4s ease-in-out infinite;
+  }
+  @keyframes sealShine{ 0%,20%{ background-position:130% 0; } 70%,100%{ background-position:-30% 0; } }
+  .seal.cracked::after{ display:none; }
+
+  /* ---------- reader ---------- */
+  .letter-scene{ transform:translateY(26px) scale(.97); transform-origin:50% 50%; }
+  .letter-scene.show{ transform:none; }
+  .letter-paper{
+    background:
+      radial-gradient(ellipse at 50% 0%, #2c4258 0%, #16212d 60%, #0e1620 100%);
+    padding-top:calc(env(safe-area-inset-top) + 58px);
+    padding-left:14px; padding-right:14px;
+  }
+  .letter-paper::before{ display:none; }
+  .letter-paper::after{
+    content:''; position:fixed; inset:0; pointer-events:none;
+    background-image:var(--pattern); background-size:48px 48px; opacity:.8; z-index:0;
+  }
+  .reader-top{
+    position:absolute; top:0; left:0; right:0; z-index:9; pointer-events:none;
+    height:calc(env(safe-area-inset-top) + 56px);
+    background:linear-gradient(#0e1620 55%, rgba(14,22,32,0));
+  }
+  .progress{
+    position:absolute; left:0; top:0; height:3px; width:100%;
+    transform-origin:left center; transform:scaleX(0);
+    background:linear-gradient(90deg,#8a6a22,#e3c675);
+  }
+  .mini-crest{
+    position:absolute; left:16px; top:calc(env(safe-area-inset-top) + 10px);
+    width:34px; height:34px; border-radius:50%;
+    border:1px solid rgba(217,188,111,.7); color:#e3c675;
+    display:flex; align-items:center; justify-content:center;
+    font-family:'Cormorant Garamond',serif; font-weight:600; font-size:19px;
+  }
+  .sound-toggle{
+    top:calc(env(safe-area-inset-top) + 10px); right:16px; pointer-events:auto;
+    background:rgba(255,255,255,.06); border:1px solid rgba(217,188,111,.55); color:#e3c675;
+  }
+  .sheet{
+    margin:0; padding:34px 20px 30px; z-index:1;
+    background:
+      linear-gradient(rgba(251,246,228,.97), rgba(244,235,208,.97));
+    border:1px solid rgba(217,188,111,.9);
+    box-shadow:0 18px 40px -16px rgba(0,0,0,.8), inset 0 0 0 5px rgba(251,246,228,.97), inset 0 0 0 6px rgba(176,141,62,.35);
+  }
+  .sc{ position:absolute; width:34px; height:34px; opacity:.95; pointer-events:none; }
+  .sc.tl{ top:9px; left:9px; }
+  .sc.tr{ top:9px; right:9px; transform:scaleX(-1); }
+  .sc.bl{ bottom:9px; left:9px; transform:scaleY(-1); }
+  .sc.br{ bottom:9px; right:9px; transform:scale(-1,-1); }
+  .crest{ display:block; width:190px; max-width:70%; margin:2px auto 16px; }
+  .letter-greeting{ text-align:center; font-size:24px !important; line-height:1.5; margin-bottom:.5em !important; }
+  .orn{ display:block; width:130px; margin:1.5em auto 1.6em; opacity:0; transition:opacity .9s ease; }
+  .orn.revealed{ opacity:1; }
+  .letter-closing{
+    position:relative; margin-top:2em !important; padding:1.6em 1.1em 1.2em !important;
+    background:linear-gradient(180deg, rgba(31,47,64,.07), rgba(31,47,64,.02));
+    border:1px solid rgba(176,141,62,.55) !important; border-top:1px solid rgba(176,141,62,.55) !important;
+    font-weight:500 !important; color:#1c150d;
+  }
+  .letter-closing::before{
+    content:''; position:absolute; top:-6px; left:50%; width:11px; height:11px;
+    transform:translateX(-50%) rotate(45deg); background:#b08d3e; box-shadow:0 0 0 3px #f6eed4;
+  }
+  .sig-swash{ display:block; width:104px; height:14px; margin:6px 0 0 auto; }
+  .sig-name{ font-size:23px !important; }
+  .replay-wrap{ margin-top:20px; padding-bottom:6px; }
+  .replay-btn{
+    background:rgba(255,255,255,.06); color:#eadfc3; border:1px solid rgba(217,188,111,.6);
+  }
+
+  /* ---------- reduced motion ---------- */
+  @media (prefers-reduced-motion: reduce){
+    *{ animation-duration:.01ms !important; transition-duration:.01ms !important; }
+  }
+
+</style>
+</head>
+<body>
+
+<div class="stage" id="stage">
+  <div class="frame-border" aria-hidden="true"></div>
+
+  <div class="corner-flourish corner-tl" aria-hidden="true">
+    <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+      <path d="M2 2 C 4 18, 10 30, 26 34" fill="none" stroke="#b08d3e" stroke-width="1.4" stroke-linecap="round"/>
+      <path d="M10 12 C 5 10, 2 6, 3 2 C 8 3, 11 7, 10 12 Z" fill="#6b7b4f"/>
+      <path d="M17 22 C 11 21, 7 17, 8 12 C 13 13, 17 17, 17 22 Z" fill="#7a8c58"/>
+      <path d="M24 30 C 18 30, 13 26, 14 21 C 19 21, 23 25, 24 30 Z" fill="#6b7b4f"/>
+      <circle cx="28" cy="35" r="2.2" fill="#d8bd76"/>
+    </svg>
+  </div>
+  <div class="corner-flourish corner-tr" aria-hidden="true">
+    <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+      <path d="M2 2 C 4 18, 10 30, 26 34" fill="none" stroke="#b08d3e" stroke-width="1.4" stroke-linecap="round"/>
+      <path d="M10 12 C 5 10, 2 6, 3 2 C 8 3, 11 7, 10 12 Z" fill="#6b7b4f"/>
+      <path d="M17 22 C 11 21, 7 17, 8 12 C 13 13, 17 17, 17 22 Z" fill="#7a8c58"/>
+      <path d="M24 30 C 18 30, 13 26, 14 21 C 19 21, 23 25, 24 30 Z" fill="#6b7b4f"/>
+      <circle cx="28" cy="35" r="2.2" fill="#d8bd76"/>
+    </svg>
+  </div>
+  <div class="corner-flourish corner-bl" aria-hidden="true">
+    <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+      <path d="M2 2 C 4 18, 10 30, 26 34" fill="none" stroke="#b08d3e" stroke-width="1.4" stroke-linecap="round"/>
+      <path d="M10 12 C 5 10, 2 6, 3 2 C 8 3, 11 7, 10 12 Z" fill="#6b7b4f"/>
+      <path d="M17 22 C 11 21, 7 17, 8 12 C 13 13, 17 17, 17 22 Z" fill="#7a8c58"/>
+      <path d="M24 30 C 18 30, 13 26, 14 21 C 19 21, 23 25, 24 30 Z" fill="#6b7b4f"/>
+      <circle cx="28" cy="35" r="2.2" fill="#d8bd76"/>
+    </svg>
+  </div>
+  <div class="corner-flourish corner-br" aria-hidden="true">
+    <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+      <path d="M2 2 C 4 18, 10 30, 26 34" fill="none" stroke="#b08d3e" stroke-width="1.4" stroke-linecap="round"/>
+      <path d="M10 12 C 5 10, 2 6, 3 2 C 8 3, 11 7, 10 12 Z" fill="#6b7b4f"/>
+      <path d="M17 22 C 11 21, 7 17, 8 12 C 13 13, 17 17, 17 22 Z" fill="#7a8c58"/>
+      <path d="M24 30 C 18 30, 13 26, 14 21 C 19 21, 23 25, 24 30 Z" fill="#6b7b4f"/>
+      <circle cx="28" cy="35" r="2.2" fill="#d8bd76"/>
+    </svg>
+  </div>
+
+  <div class="motes" id="motes" aria-hidden="true"></div>
+  <div class="petals" id="petals" aria-hidden="true"></div>
+
+  <div class="envelope-scene" id="envelopeScene">
+    <div class="envelope-wrap">
+      <div class="envelope" id="envelope">
+        <div class="envelope-back"></div>
+
+        <div class="envelope-letter" aria-hidden="true">
+          <span class="lt">T</span><i></i><i></i><i></i>
+        </div>
+        <div class="envelope-pocket" aria-hidden="true"></div>
+        <svg class="pocket-lines" viewBox="0 0 300 202" preserveAspectRatio="none" aria-hidden="true">
+          <polyline points="0,0 150,121 300,0" fill="none" stroke="#b08d3e" stroke-opacity=".55" stroke-width="1" vector-effect="non-scaling-stroke"/>
+          <polyline points="0,202 128,92" fill="none" stroke="#b08d3e" stroke-opacity=".3" stroke-width="1" vector-effect="non-scaling-stroke"/>
+          <polyline points="300,202 172,92" fill="none" stroke="#b08d3e" stroke-opacity=".3" stroke-width="1" vector-effect="non-scaling-stroke"/>
+        </svg>
+
+        <div class="envelope-flap" id="envelopeFlap">
+          <svg class="sprig" viewBox="0 0 40 40" aria-hidden="true">
+            <path d="M20 36 C20 26 20 18 20 6" fill="none" stroke="#6b7b4f" stroke-width="1.4" stroke-linecap="round"/>
+            <path d="M20 14 C15 12 12 8 12 4 C17 5 20 9 20 14 Z" fill="#7a8c58"/>
+            <path d="M20 20 C25 18 28 14 28 10 C23 11 20 15 20 20 Z" fill="#6b7b4f"/>
+            <path d="M20 27 C15 26 12 22 12 18 C17 19 20 22 20 27 Z" fill="#7a8c58"/>
+          </svg>
+        </div>
+
+        <div class="stamp" aria-hidden="true">
+          <svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
+            <path d="M20 5 L24 16 L35 20 L24 24 L20 35 L16 24 L5 20 L16 16 Z" fill="#2c3e52"/><circle cx="20" cy="20" r="2.4" fill="#d8bd76"/>
+          </svg>
+        </div>
+
+        <div class="envelope-address">
+          <span class="address-text">For Towa</span>
+          <span class="address-bn">আমার প্রিয় তোয়া</span>
+          <svg class="address-rule" viewBox="0 0 100 10" aria-hidden="true">
+            <line x1="0" y1="5" x2="38" y2="5" stroke="#b08d3e" stroke-width="1"/>
+            <path d="M50 1.5 L54 5 L50 8.5 L46 5 Z" fill="#b08d3e"/>
+            <line x1="62" y1="5" x2="100" y2="5" stroke="#b08d3e" stroke-width="1"/>
+          </svg>
+        </div>
+
+        <button type="button" class="seal" id="seal" aria-label="সিল খুলে চিঠিটি পড়ুন">
+          <svg class="seal-half seal-half-left" viewBox="0 0 100 100" aria-hidden="true">
+            <defs>
+              <radialGradient id="waxGrad" cx="35%" cy="30%" r="75%">
+                <stop offset="0%" stop-color="#4d6783"/>
+                <stop offset="48%" stop-color="#2c3e52"/>
+                <stop offset="100%" stop-color="#16212d"/>
+              </radialGradient>
+            </defs>
+            <g fill="url(#waxGrad)">
+              <circle cx="50" cy="50" r="26"/>
+              <circle cx="78" cy="50" r="15"/>
+              <circle cx="69" cy="70" r="15"/>
+              <circle cx="50" cy="78" r="15"/>
+              <circle cx="31" cy="70" r="15"/>
+              <circle cx="22" cy="50" r="15"/>
+              <circle cx="31" cy="30" r="15"/>
+              <circle cx="50" cy="22" r="15"/>
+              <circle cx="69" cy="30" r="15"/>
+            </g>
+            <circle cx="50" cy="50" r="33" fill="none" stroke="rgba(255,255,255,.14)" stroke-width="1.6"/>
+            <circle cx="50" cy="50" r="22" fill="none" stroke="rgba(0,0,0,.28)" stroke-width="1.2"/>
+          </svg>
+          <svg class="seal-half seal-half-right" viewBox="0 0 100 100" aria-hidden="true">
+            <g fill="url(#waxGrad)">
+              <circle cx="50" cy="50" r="26"/>
+              <circle cx="78" cy="50" r="15"/>
+              <circle cx="69" cy="70" r="15"/>
+              <circle cx="50" cy="78" r="15"/>
+              <circle cx="31" cy="70" r="15"/>
+              <circle cx="22" cy="50" r="15"/>
+              <circle cx="31" cy="30" r="15"/>
+              <circle cx="50" cy="22" r="15"/>
+              <circle cx="69" cy="30" r="15"/>
+            </g>
+            <circle cx="50" cy="50" r="33" fill="none" stroke="rgba(255,255,255,.14)" stroke-width="1.6"/>
+            <circle cx="50" cy="50" r="22" fill="none" stroke="rgba(0,0,0,.28)" stroke-width="1.2"/>
+          </svg>
+          <span class="seal-mono" aria-hidden="true">T</span>
+        </button>
+      </div>
+    </div>
+    <p class="tap-hint" id="tapHint">সিলটিতে ট্যাপ করুন</p>
+  </div>
+
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+    <symbol id="cn" viewBox="0 0 40 40"><path d="M2 38 V12 Q2 2 12 2 H38" fill="none" stroke="#b08d3e" stroke-width="1.3"/><path d="M8 38 V15 Q8 8 15 8 H38" fill="none" stroke="#b08d3e" stroke-opacity=".5" stroke-width="1"/><circle cx="2" cy="2" r="2.4" fill="#b08d3e"/></symbol>
+  </defs></svg>
+
+  <div class="letter-scene" id="letterScene">
+    <div class="reader-top">
+      <div class="progress" id="progress"></div>
+      <span class="mini-crest" aria-hidden="true">T</span>
+      <button type="button" class="sound-toggle" id="soundToggle" aria-label="গান বন্ধ করুন">🔊</button>
+    </div>
+    <div class="letter-paper" id="letterPaper">
+      <div class="sheet">
+        <svg class="sc tl" aria-hidden="true"><use href="#cn"/></svg>
+        <svg class="sc tr" aria-hidden="true"><use href="#cn"/></svg>
+        <svg class="sc bl" aria-hidden="true"><use href="#cn"/></svg>
+        <svg class="sc br" aria-hidden="true"><use href="#cn"/></svg>
+        <svg class="crest" viewBox="0 0 220 64" aria-hidden="true">
+          <line x1="10" y1="32" x2="64" y2="32" stroke="#b08d3e" stroke-width="1"/>
+          <path d="M66 32 l4 -4 l4 4 l-4 4z" fill="#b08d3e"/>
+          <circle cx="110" cy="32" r="24" fill="#1f2f40" stroke="#b08d3e" stroke-width="1.5"/>
+          <circle cx="110" cy="32" r="20" fill="none" stroke="#d9bc6f" stroke-opacity=".7" stroke-width=".8"/>
+          <text x="110" y="41" text-anchor="middle" font-family="Cormorant Garamond, serif" font-weight="600" font-size="26" fill="#e9d9b0">T</text>
+          <path d="M146 32 l4 -4 l4 4 l-4 4z" fill="#b08d3e"/>
+          <line x1="156" y1="32" x2="210" y2="32" stroke="#b08d3e" stroke-width="1"/>
+        </svg>
+        <div class="letter-body" id="letterBody" lang="bn"></div>
+      </div>
+      <div class="replay-wrap">
+        <button type="button" class="replay-btn" id="replayBtn">↻ আবার পড়ুন</button>
+      </div>
+    </div>
+  </div>
+
+  <audio id="bgAudio" loop preload="none">
+    <source src="assets/love.mp3" type="audio/mpeg">
+  </audio>
+</div>
+
+<script>
+(function(){
+  /* ============================================================
+     ✏️  EDIT YOUR LETTER HERE
+     ============================================================ */
+  var CONFIG = {
+    greeting: "আমার প্রিয় তোয়া, ❤️",
+    paragraphs: [
+      "সত্যি বলতে, তোমাকে কী দিয়ে শুরু করে কী বলব, সেটাই বুঝতে পারছি না। তোমাকে বলার মতো কত কথা যে আমার মনের মধ্যে জমে আছে, তা হয়তো নিজেও জানি না। মাঝে মাঝে মনে হয়, মনের সব অনুভূতি কি আর কথায় প্রকাশ করা যায়? কিছু অনুভূতি শুধু অনুভব করা যায়, বোঝানো যায় না। তোমার প্রতি আমার অনুভূতিটাও ঠিক তেমনই।",
+      "জানো, তোমার সাথে কথা বলা এখন আমার দিনের সবচেয়ে প্রিয় একটা অংশ হয়ে গেছে। তোমার সাথে সাধারণ কিছু কথা বললেও মনের মধ্যে কেমন একটা শান্তি কাজ করে, যেটা আমি ঠিক ভাষায় বোঝাতে পারব না। তাই তো সবসময় তোমার সাথে কথা বলতে ইচ্ছে করে। অনেক সময় বলার মতো বিশেষ কিছু থাকে না, তবুও মনে হয় তোমার সাথে একটু কথা বলি। আর মজার ব্যাপার কী জানো? তোমার সাথে কথা বলতে বলতেও তোমাকে মিস করি! ব্যাপারটা কেমন অদ্ভুত, তাই না? কিন্তু সত্যি বলতে, তোমাকে কতটা মিস করি, সেটা হয়তো কখনো বোঝাতে পারব না।",
+      "আর তোমার ছবির জন্য আমার এত আবদার তো তুমি জানোই। 😂 আসলে শুধু তোমার সুন্দর মুখটা দেখার জন্য যে ছবি চাই, তা কিন্তু না। তোমার মুখটার মধ্যে এমন কিছু একটা আছে, যেটা দেখলে আমার মনের ভেতরটা কেমন যেন ছুঁয়ে যায়। তোমার দিকে তাকিয়ে থাকলে মনে হয়, চারপাশের সব চিন্তা কিছুক্ষণের জন্য থেমে গেছে। তোমাকে যতবার দেখি, ততবারই যেন নতুন করে তোমার প্রেমে পড়ে যাই। তোমার মুখের ওই মায়াটা আমার কাছে কখনো পুরোনো হয় না।",
+      "জানো, তোমাকে দেখলে আমার কেন জানি খুব মায়া লাগে। তোমার চেহারায় একটা অদ্ভুত মিষ্টি সরলতা আছে, বিশেষ করে তোমার ওই ছোট্ট বাচ্চাদের মতো নিষ্পাপ মুখটা! মাঝে মাঝে তোমাকে দেখে মনে হয়, পৃথিবীর সবটুকু আদর আর ভালোবাসা যেন তোমার জন্যই জমিয়ে রাখা উচিত। তোমাকে নিয়ে যত ভাবি, ততই মনে হয়, তোমাকে কতটা যত্নে রাখতে ইচ্ছে করে। তোমার মুখে সবসময় হাসি দেখতে চাই, আর তোমার ওই মায়াবী চোখ দুটোতে কখনো মন খারাপ দেখতে চাই না।",
+      "আর তুমি যখন ব্যস্ত থাকো বা কথা বলতে পারো না, তখন আমি কী করি জানো? তোমার পুরোনো ছবিগুলো বের করে দেখতে থাকি। অনেক সময় একটা ছবির দিকেই কতক্ষণ যে তাকিয়ে থাকি, নিজেও বুঝতে পারি না। আর সবচেয়ে মজার ব্যাপার হলো, তোমার ছবিগুলো দেখতে দেখতে কখন যে নিজের কল্পনার জগতে হারিয়ে যাই, বুঝতেই পারি না। সেখানে তোমাকে নিয়ে কত স্বপ্ন দেখি! মনে মনে ভাবি, যদি কোনোদিন তোমার সাথে একটা সুন্দর জীবন কাটানোর সুযোগ হতো! একসাথে ঘুরতে যাওয়া, গল্প করা, হাসাহাসি করা, তোমার ছোট ছোট আবদার পূরণ করা, তোমার যত্ন নেওয়া—এমন কত ছোট ছোট মুহূর্ত কল্পনা করি। এই সাধারণ বিষয়গুলোও তোমাকে নিয়ে ভাবলে আমার কাছে কতটা সুন্দর মনে হয়! কখনো কখনো নিজের কল্পনায় এতটাই ডুবে যাই যে মনে হয়, যেন সত্যিই সেই মুহূর্তগুলো তোমার সাথে কাটাচ্ছি। এই অনুভূতিটা তোমাকে কীভাবে বোঝাব, সত্যিই জানি না।",
+      "তোমার একটা কথা হয়তো তুমি জানো না, তোমার মন ভালো থাকা বা খারাপ থাকার সাথে আমার নিজের মনটাও কেমন যেন জড়িয়ে গেছে। তোমার মন খারাপের কথা শুনলে আমারও ভালো লাগে না। তখন শুধু মনে হয়, কী হয়েছে তোমার? ইশ, যদি কোনোভাবে তোমার মনটা একটু ভালো করে দিতে পারতাম! আবার তুমি যখন কোনো কারণে খুশি হও, তোমার সেই খুশির কথা শুনেই আমার মনটাও ভালো হয়ে যায়। তুমি হয়তো খুব ছোট একটা বিষয় নিয়ে আনন্দ পাও, কিন্তু সেই আনন্দের কথা শুনে আমারও যে কত ভালো লাগে, সেটা হয়তো তোমাকে বলে বোঝাতে পারব না। আসলে তোমার ভালো থাকাটা কখন যে আমার নিজের ভালো থাকার সাথেও জড়িয়ে গেছে, আমি নিজেও বুঝতে পারিনি।",
+      "তোয়া, আমি জানি, আমার অনুভূতিগুলো তোমার অনুভূতির চেয়ে অনেক বেশি গভীর। আমি এটাও জানি যে তুমি এখনো কোনো সম্পর্কে জড়ানোর জন্য প্রস্তুত নও। আমি তোমার এই সিদ্ধান্তকে সম্মান করি। তোমাকে কোনো কিছু নিয়ে চাপ দিতে চাই না। আমি শুধু চাই, আমাদের এই কথা বলা, ছোট ছোট মুহূর্ত, হাসি-ঠাট্টা আর একে অপরের সাথে মনের কথা ভাগ করে নেওয়াটা যেন এভাবেই চলতে থাকে।",
+      "কিন্তু তোমার প্রতি আমার অনুভূতিটা তো আর চাইলেই বদলে ফেলতে পারি না। কেন তোমাকে এতটা ভালোবাসি, সেটার কোনো নির্দিষ্ট কারণও খুঁজে পাই না। কখন যে তুমি আমার প্রতিদিনের ভাবনার এতটা জায়গা জুড়ে নিয়েছ, বুঝতেই পারিনি। নিজের ভবিষ্যতের কথা ভাবতে গেলেও কেমন করে যেন তোমার কথা চলে আসে। তোমাকে ছাড়া একটা ভবিষ্যৎ কল্পনা করতেও কেমন জানি লাগে। এমনকি তোমাকে অন্য কারো সাথে কল্পনা করাটাও আমার জন্য ভীষণ কঠিন। জানি না এটা কেমন অনুভূতি, শুধু জানি তোমার প্রতি আমি ভীষণভাবে দুর্বল হয়ে পড়েছি। আমার মনের এক কোণে এখনো তোমাকে নিয়ে একটা সুন্দর ভবিষ্যতের স্বপ্ন রয়ে গেছে।",
+      "আর তোয়া, আমি সত্যিই চাই তুমি আমার জীবনে থেকো। তোমাকে আগেও বলেছি, কোনো সমস্যা নেই, তুমি শুধু আমার সাথে থেকো, ইনশাআল্লাহ আমি সবকিছু সামলে নেব। আমি চাই, তোমার মনের সব কথা তুমি আমার সাথে ভাগ করে নাও। তোমার কোনো কথা আমার কাছে ছোট নয়, তোমার কোনো অনুভূতিই আমার কাছে অগুরুত্বপূর্ণ নয়। মন খারাপ হলে বা কোনো কিছু নিয়ে কষ্ট পেলে নির্দ্বিধায় আমাকে বলো। তোমাকে কখনো আমার কাছে নিজের অনুভূতি লুকাতে হবে না। আমি শুধু চাই, তুমি জানো যে এমন একজন মানুষ আছে, যে তোমার কথা মন দিয়ে শোনে, তোমার ছোট ছোট বিষয়গুলোও গুরুত্ব দেয় এবং পরিস্থিতি যেমনই হোক, তোমার পাশে থাকতে চায়।",
+      "আমি জানি না আল্লাহ আমাদের ভাগ্যে কী লিখে রেখেছেন। ভবিষ্যতে কী হবে, সেটাও জানি না। তবে তোমার জন্য আমি দোয়া করি। তোমার সুখের জন্য, তোমার ভালো থাকার জন্য, তোমার সুস্থতার জন্য, তোমার জীবনের প্রতিটা সুন্দর মুহূর্তের জন্য দোয়া করি। আর হ্যাঁ, মাঝে মাঝে আল্লাহর কাছে এটাও চাই, যদি সম্ভব হয়, তাহলে যেন একদিন আমাদের দুজনের পথ এক হয়ে যায়। হয়তো নিজের জন্য একটু স্বার্থপরের মতো চাওয়া, কিন্তু এটাই আমার মনের সত্যি কথা।",
+      "মাঝে মাঝে খুব ইচ্ছে করে, তুমি যদি একবার নিজেকে আমার চোখ দিয়ে দেখতে! তাহলে হয়তো বুঝতে পারতে, কেন আমি বারবার তোমার ছবি চাই, কেন তোমার মেসেজ দেখলে আমার মুখে হাসি চলে আসে, কেন তোমাকে মিস করলে পুরোনো ছবিগুলো দেখতে বসি, আর কেন শুধু তোমার একটা ছবি দেখেই তোমাকে নিয়ে কত সুন্দর সুন্দর স্বপ্ন বুনতে শুরু করি।",
+      "জানি না ভবিষ্যতে আমাদের জন্য কী অপেক্ষা করছে। তবে মন থেকে চাই, জীবন তোমার প্রতি সবসময় সুন্দর আর সদয় হোক। তোমার মুখের ওই মিষ্টি হাসিটা যেন কখনো হারিয়ে না যায়। তোমার ওই মায়াবী চোখ দুটোর দীপ্তি যেন কখনো ম্লান না হয়। আর জীবনের কোনো এক কঠিন সময়ে যদি কখনো মন খারাপ হয়, তাহলে মনে রেখো, দূরে কোথাও একজন মানুষ আছে, যে প্রতিনিয়ত তোমার জন্য দোয়া করে, তোমাকে মিস করে, তোমার কথা ভাবে এবং মন থেকে চায় তুমি সবসময় ভালো থাকো।"
+    ],
+    closing: "তোয়া, আমি তোমাকে ভীষণ ভালোবাসি। কতটা ভালোবাসি, সেটা হয়তো হাজারটা কথাতেও বোঝাতে পারব না। ইচ্ছে করে, আমার মনের ভেতরে তোমার জন্য জমে থাকা সবটুকু ভালোবাসা যদি একবার তোমাকে অনুভব করাতে পারতাম! যদি কোনো একটা ইচ্ছা পূরণ করার সুযোগ পেতাম, তাহলে চাইতাম তুমি আমার পাশে থাকো, তোমাকে ভালোবাসতে পারি, তোমার যত্ন নিতে পারি, তোমার মুখে হাসি ফোটাতে পারি আর জীবনের ছোট ছোট মুহূর্তগুলো তোমার সাথে কাটাতে পারি। জানি না এই ভালোবাসার কোনো পরিমাপ হয় কি না। শুধু জানি, তুমি আমার জীবনের এমন একজন মানুষ হয়ে গেছ, যাকে হারানোর কথা ভাবতেও আমার ভীষণ কষ্ট হয়। তোমাকে নিয়ে আমার মনের এই মায়া, এই ভালোবাসা আর এই স্বপ্নগুলো কতদিন থাকবে জানি না, তবে আজ যতটুকু ভালোবাসি, তা আমার সমস্ত মন দিয়েই ভালোবাসি। ❤️",
+    signatureLine: "দোয়া ও ভালোবাসাসহ,",
+    signatureName: "সাবিত"
+  };
+
+  var REDUCED = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+
+  /* ---------- populate letter text ---------- */
+  var bodyEl = document.getElementById('letterBody');
+
+  var greetP = document.createElement('p');
+  greetP.className = 'letter-greeting rv';
+  greetP.textContent = CONFIG.greeting;
+  bodyEl.appendChild(greetP);
+
+  var ORN = '<svg class="orn rv" viewBox="0 0 120 12" aria-hidden="true"><line x1="0" y1="6" x2="44" y2="6" stroke="#b08d3e" stroke-width="1"/><circle cx="50" cy="6" r="1.4" fill="#b08d3e"/><path d="M60 1.5 L64.5 6 L60 10.5 L55.5 6Z" fill="#b08d3e"/><circle cx="70" cy="6" r="1.4" fill="#b08d3e"/><line x1="76" y1="6" x2="120" y2="6" stroke="#b08d3e" stroke-width="1"/></svg>';
+  CONFIG.paragraphs.forEach(function(t, idx){
+    var p = document.createElement('p');
+    p.className = 'rv';
+    p.textContent = t;
+    bodyEl.appendChild(p);
+    if(idx === 2 || idx === 5 || idx === 8){
+      var d = document.createElement('div');
+      d.innerHTML = ORN;
+      bodyEl.appendChild(d.firstChild);
+    }
+  });
+
+  var closeP = document.createElement('p');
+  closeP.className = 'letter-closing rv';
+  closeP.textContent = CONFIG.closing;
+  bodyEl.appendChild(closeP);
+
+  var sigP = document.createElement('p');
+  sigP.className = 'letter-signature rv';
+  sigP.innerHTML = '<span class="sig-line"></span><span class="sig-rule"></span><span class="sig-name"></span><svg class="sig-swash" viewBox="0 0 120 14" aria-hidden="true"><path d="M2 9 C 20 1, 34 14, 56 7 S 100 3, 118 9" fill="none" stroke="#b08d3e" stroke-width="1.3" stroke-linecap="round"/></svg>';
+  sigP.querySelector('.sig-line').textContent = CONFIG.signatureLine;
+  sigP.querySelector('.sig-name').textContent = CONFIG.signatureName;
+  bodyEl.appendChild(sigP);
+
+  /* ---------- ambient dust motes ---------- */
+  var motesWrap = document.getElementById('motes');
+  if(!REDUCED){
+    for(var i=0;i<10;i++){
+      var m = document.createElement('span');
+      m.className = 'mote';
+      var size = 2 + Math.random()*3;
+      m.style.width = size+'px';
+      m.style.height = size+'px';
+      m.style.left = (Math.random()*100)+'%';
+      m.style.top = (30 + Math.random()*60)+'%';
+      m.style.animationDelay = (Math.random()*9)+'s';
+      m.style.animationDuration = (7+Math.random()*5)+'s';
+      motesWrap.appendChild(m);
+    }
+  }
+
+  /* ---------- floating pressed-flower petals ---------- */
+  var petalsWrap = document.getElementById('petals');
+  if(!REDUCED){
+    var petalSVG = '<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">'
+      + '<g fill="#8a9a6c">'
+      + '<ellipse cx="12" cy="6" rx="3.4" ry="5"/>'
+      + '<ellipse cx="12" cy="6" rx="3.4" ry="5" transform="rotate(72 12 12)"/>'
+      + '<ellipse cx="12" cy="6" rx="3.4" ry="5" transform="rotate(144 12 12)"/>'
+      + '<ellipse cx="12" cy="6" rx="3.4" ry="5" transform="rotate(216 12 12)"/>'
+      + '<ellipse cx="12" cy="6" rx="3.4" ry="5" transform="rotate(288 12 12)"/>'
+      + '</g><circle cx="12" cy="12" r="2.6" fill="#d8bd76"/></svg>';
+    for(var j=0;j<6;j++){
+      var pt = document.createElement('span');
+      pt.className = 'petal';
+      pt.innerHTML = petalSVG;
+      var psize = 10 + Math.random()*8;
+      pt.style.width = psize+'px';
+      pt.style.height = psize+'px';
+      pt.style.left = (Math.random()*100)+'%';
+      pt.style.top = (10 + Math.random()*70)+'%';
+      pt.style.animationDelay = (Math.random()*12)+'s';
+      pt.style.animationDuration = (9+Math.random()*6)+'s';
+      petalsWrap.appendChild(pt);
+    }
+  }
+
+  /* ---------- elements ---------- */
+  var seal = document.getElementById('seal');
+  var envelope = document.getElementById('envelope');
+  var envelopeScene = document.getElementById('envelopeScene');
+  var letterScene = document.getElementById('letterScene');
+  var tapHint = document.getElementById('tapHint');
+  var soundToggle = document.getElementById('soundToggle');
+  var replayBtn = document.getElementById('replayBtn');
+  var audio = document.getElementById('bgAudio');
+  var opened = false;
+  var paper = document.getElementById('letterPaper');
+  var progress = document.getElementById('progress');
+  var io = null;
+  function updateProgress(){
+    var max = paper.scrollHeight - paper.clientHeight;
+    progress.style.transform = 'scaleX(' + (max > 0 ? Math.min(1, paper.scrollTop / max) : 0) + ')';
+  }
+  paper.addEventListener('scroll', updateProgress, {passive:true});
+
+  function revealLetterContent(){
+    paper.scrollTop = 0; updateProgress();
+    var items = bodyEl.querySelectorAll('.rv');
+    if(io){ io.disconnect(); io = null; }
+    if(REDUCED || !('IntersectionObserver' in window)){
+      items.forEach(function(el){ el.classList.add('revealed'); });
+      replayBtn.classList.add('revealed');
+      return;
+    }
+    io = new IntersectionObserver(function(entries){
+      entries.forEach(function(en){
+        if(!en.isIntersecting) return;
+        en.target.classList.add('revealed');
+        io.unobserve(en.target);
+        if(en.target.classList.contains('letter-signature')) replayBtn.classList.add('revealed');
+      });
+    }, {root: paper, threshold: 0.1, rootMargin: '0px 0px -5% 0px'});
+    items.forEach(function(el){ io.observe(el); });
+  }
+
+  function openEnvelope(){
+    if(opened) return;
+    opened = true;
+
+    seal.classList.add('cracked');
+    tapHint.style.opacity = 0;
+
+    audio.volume = 0.55;
+    var p = audio.play();
+    if(p && p.catch) p.catch(function(){});
+
+    var flapDelay = REDUCED ? 0 : 230;
+    var hideDelay = REDUCED ? 0 : 1750;
+    var showDelay = REDUCED ? 60 : 1830;
+
+    setTimeout(function(){ envelope.classList.add('opened'); }, flapDelay);
+    setTimeout(function(){ envelopeScene.classList.add('hide'); }, hideDelay);
+    setTimeout(function(){
+      letterScene.classList.add('show');
+      revealLetterContent();
+    }, showDelay);
+  }
+
+  function resetToEnvelope(){
+    letterScene.classList.remove('show');
+    bodyEl.querySelectorAll('.rv').forEach(function(p){ p.classList.remove('revealed'); });
+    if(io){ io.disconnect(); io = null; }
+    replayBtn.classList.remove('revealed');
+
+    setTimeout(function(){
+      envelope.classList.remove('opened');
+      seal.classList.remove('cracked');
+      envelopeScene.classList.remove('hide');
+      tapHint.style.opacity = '';
+      opened = false;
+    }, 400);
+  }
+
+  seal.addEventListener('click', openEnvelope);
+  replayBtn.addEventListener('click', resetToEnvelope);
+
+  soundToggle.addEventListener('click', function(){
+    audio.muted = !audio.muted;
+    soundToggle.textContent = audio.muted ? '🔈' : '🔊';
+    soundToggle.setAttribute('aria-label', audio.muted ? 'গান চালু করুন' : 'গান বন্ধ করুন');
+  });
+})();
+</script>
+</body>
+</html>
